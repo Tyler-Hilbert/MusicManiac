@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -23,6 +24,7 @@ import javafx.scene.media.MediaPlayer;
 public class SongsView {
     
     MediaPlayer mediaPlayer;
+    Button playButton;
     
     
     public SongsView(Stage primaryStage) {
@@ -52,6 +54,13 @@ public class SongsView {
         primaryStage.show();
     }
     
+    /**
+     * Loads the songs to the view.
+     * 
+     * It instantiates the SongLoader class to load songs.
+     * Adds songs to grid.
+     * Adds action listeners that play the song.
+     */
     private void loadSongs(GridPane grid) {
         File dir = new File("D:\\Music\\Current");
         
@@ -69,6 +78,7 @@ public class SongsView {
                 @Override
                 public void handle(MouseEvent me) {
                     playSong(song.getPath());
+                    playButton.setText("Pause");
                 }
             });
             
@@ -87,14 +97,32 @@ public class SongsView {
         mediaPlayer.play();
     }
     
+    /**
+     * Creates the player pane.
+     * Adds action listeners for playing and pausing the song.
+    */
     private void addPlayerPane(BorderPane root) {
         HBox hbox = new HBox();
         hbox.setPadding(new Insets(15, 12, 15, 12));
         hbox.setSpacing(10);
         hbox.setStyle("-fx-background-color: #336699;");
 
-        Button playButton = new Button("Play");
+        playButton = new Button("Play");
         playButton.setPrefSize(100, 20);
+        playButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override 
+            public void handle(ActionEvent e) {
+                if (mediaPlayer == null){
+                    
+                } else if (mediaPlayer.getStatus() == MediaPlayer.Status.PLAYING) {
+                    mediaPlayer.pause();
+                    playButton.setText("Play");
+                } else if (mediaPlayer.getStatus() == MediaPlayer.Status.PAUSED) {
+                    mediaPlayer.play();
+                    playButton.setText("Pause");
+                }
+            }
+        });
  
         hbox.getChildren().addAll(playButton);
 

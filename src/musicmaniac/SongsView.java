@@ -1,8 +1,6 @@
 package musicmaniac;
 
 import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -26,7 +24,6 @@ public class SongsView {
     
     MediaPlayer mediaPlayer;
     
-    final private List<String> ext = Arrays.asList(".mp3", ".wav", ".m4a");
     
     public SongsView(Stage primaryStage) {
         // Set up grid
@@ -36,9 +33,9 @@ public class SongsView {
         grid.setVgap(10);
         grid.setPadding(new Insets(25, 25, 25, 25));
         
-        loadSongs(grid);
         
-       
+        loadSongs(grid);
+     
         
         ScrollPane sp = new ScrollPane();
         sp.setContent(grid);
@@ -56,12 +53,13 @@ public class SongsView {
     }
     
     private void loadSongs(GridPane grid) {
-        ArrayList<Song> songs = new ArrayList<Song>();
-        
         File dir = new File("D:\\Music\\Current");
-        loadDirectory(dir, songs);
         
+        // Loads songs from dir
+        SongLoader loader = new SongLoader();
+        ArrayList<Song> songs = loader.loadSongs(dir);
         
+        // Add to form
         for (int i = 0; i < songs.size(); i++) {
             Song song = new Song(songs.get(i).getPath(), songs.get(i).getName());
             
@@ -75,23 +73,6 @@ public class SongsView {
             });
             
             grid.add(songLabel, 0, i);
-        }
-    }
-        
-    private void loadDirectory(File dir, ArrayList<Song> songs) {
-        for (File songFile : dir.listFiles()) {
-            if (songFile.isDirectory()) {
-                loadDirectory(songFile, songs);
-            } else {
-                String title = songFile.getName();
-                String extension = title.substring(title.lastIndexOf("."));
-                if (ext.contains(extension)) {
-                    title = title.substring(0, title.lastIndexOf(".")); // Remove file extension
-                    songs.add(new Song(songFile.getPath(), title));
-                } else {
-                    System.out.println(extension);
-                }
-            }
         }
     }
     

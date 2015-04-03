@@ -1,29 +1,21 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package musicmaniac;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import javafx.event.EventHandler;
-import javafx.scene.control.Label;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.GridPane;
 
 /**
- *
- * @author Tyler
+ * Loads the songs
  */
 public class SongLoader {
+    final private static List<String> ext = Arrays.asList(".mp3", ".wav", ".m4a"); // The compatiable file formats
     
-    
-    final private static List<String> ext = Arrays.asList(".mp3", ".wav", ".m4a");
-    
-    
+    /**
+     * Loads songs from a directory
+     * @param dir the directory to load from
+     * @return an arraylist of the loaded songs
+     */
     public ArrayList<Song> loadSongs(File dir) {
         ArrayList<Song> songs = new ArrayList<Song>();
        
@@ -32,6 +24,11 @@ public class SongLoader {
         return songs;
     }
         
+    /**
+     * Loads all songs in a directory and calls itself back up if another directory is found.
+     * @param dir the directory to load from
+     * @param songs the arraylist of loaded songs
+     */
     private void loadDirectory(File dir, ArrayList<Song> songs) {
         for (File songFile : dir.listFiles()) {
             if (songFile.isDirectory()) {
@@ -42,8 +39,6 @@ public class SongLoader {
                 if (ext.contains(extension)) {
                     title = title.substring(0, title.lastIndexOf(".")); // Remove file extension
                     songs.add(new Song(songFile.getPath(), title));
-                } else {
-                    System.out.println(extension);
                 }
             }
         }

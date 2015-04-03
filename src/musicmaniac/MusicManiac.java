@@ -3,6 +3,10 @@ package musicmaniac;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
+/**
+ * Main for the application.
+ * Instantiates the view.
+ */
 public class MusicManiac extends Application {
     
     @Override

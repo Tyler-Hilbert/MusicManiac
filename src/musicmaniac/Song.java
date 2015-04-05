@@ -7,12 +7,6 @@ public class Song {
     private String artist;
     private String album;
     
-    
-    public Song(String path, String name) {
-        this.path = path;
-        this.name = name;
-    }
-    
     public Song(String path, String name, String artist, String album, int length) {
         this.path = path;
         this.name = name;

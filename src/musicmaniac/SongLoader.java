@@ -6,6 +6,7 @@ import java.util.List;
 import org.jaudiotagger.audio.mp3.MP3AudioHeader;
 import org.jaudiotagger.audio.mp3.MP3File;
 import java.io.File;
+import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
 import org.jaudiotagger.tag.FieldKey;
 import org.jaudiotagger.tag.Tag;
@@ -41,18 +42,12 @@ public class SongLoader {
                 String title = songFile.getName();
                 String extension = title.substring(title.lastIndexOf("."));
                 title = title.substring(0, title.lastIndexOf(".")); // Remove file extension
-
                 
-                // Check if file format is supported
-                if (ext.contains(extension)) {  
-                    // Get details about song
-                    
-                    if (extension.equals(".mp3")) {
-                        addMP3(songFile, title, songs);
-                    } else {
-                        Song song = new Song(songFile.getPath(), title);
-                        songs.add(song);
-                    }
+                // Add song to songs list
+                if (extension.equals(".mp3")) {
+                    addMP3(songFile, title, songs);
+                } else if (extension.equals(".m4a")){
+                    addM4A(songFile, title, songs);
                 }
             }
         }
@@ -77,6 +72,28 @@ public class SongLoader {
 
             songs.add(new Song(songFile.getPath(), title, artist, album, length));
 
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+    
+    /**
+     * Parses the meta data/details of the m4a and adds it to the list of songs
+     * @param songFile The m4a file that will be added to the list
+     * @param title The title of the m4a
+     * @param songs The current list of all songs. This is the list that will be added to.
+     */
+    private void addM4A(File songFile, String title, ArrayList<Song> songs) {
+        try {
+            AudioFile audioFile = AudioFileIO.read(songFile);
+            int length = audioFile.getAudioHeader().getTrackLength();
+            
+            Tag tag = audioFile.getTag();
+            String album = tag.getFirst(FieldKey.ALBUM);
+            String artist = tag.getFirst(FieldKey.ARTIST);
+
+            Song song = new Song(songFile.getPath(), title, artist, album, length);
+            songs.add(song);
         } catch (Exception ex) {
             ex.printStackTrace();
         }

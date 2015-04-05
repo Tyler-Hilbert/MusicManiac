@@ -23,7 +23,7 @@ public class PlayerPane extends HBox {
     public PlayerPane() {
         setPadding(new Insets(15, 12, 15, 12));
         setSpacing(10);
-        setStyle("-fx-background-color: #336699;");
+        setStyle("-fx-background-color: #0099CC;");
 
         
         // Add play / pause buttons and listeners

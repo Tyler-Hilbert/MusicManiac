@@ -37,14 +37,18 @@ public class SongsView {
         primaryStage.setScene(scene);
         primaryStage.show();
                
-        addSongsVBox(root);
-        addPlayerPane(root);
+        // Loads songs from dir
+        SongLoader loader = new SongLoader();
+        File dir = new File("D:\\Music\\Current");
+        ArrayList<Song> songs = loader.loadSongs(dir);
+        addSongsVBox(root, songs);
+        addPlayerPane(root, songs);
     }
     
     /**
      * Adds the VBox that has all the songs 
      */
-    private void addSongsVBox(BorderPane root) {
+    private void addSongsVBox(BorderPane root, ArrayList<Song> songs) {
         // Create vbox
         VBox songsVBox = new VBox();
         songsVBox.setPadding(new Insets(10));
@@ -57,19 +61,13 @@ public class SongsView {
         
         root.setCenter(sp);
         
-        loadSongs(songsVBox);
+        addSongs(songsVBox, songs);
     }
     
     /**
-     * Loads the songs to the view.
+     * adds the songs to the view.
      */
-    private void loadSongs(VBox songsVBox) {
-        File dir = new File("D:\\Music\\Current");
-        
-        // Loads songs from dir
-        SongLoader loader = new SongLoader();
-        ArrayList<Song> songs = loader.loadSongs(dir);
-        
+    private void addSongs(VBox songsVBox, ArrayList<Song> songs) {
         // Add to form
         for (int i = 0; i < songs.size(); i++) {
             Song song = songs.get(i);
@@ -104,8 +102,8 @@ public class SongsView {
     /**
      * Adds the player pane that displays song and play/pause button
      */
-    private void addPlayerPane(BorderPane root) {
-        playerPane = new PlayerPane();
+    private void addPlayerPane(BorderPane root, ArrayList<Song> songs) {
+        playerPane = new PlayerPane(songs);
         root.setTop(playerPane);
     }
     

@@ -25,7 +25,7 @@ public class MusicManiac extends Application {
     
     @Override
     public void start(Stage primaryStage) {
-        primaryStage.getIcons().add(new Image(this.getClass().getResourceAsStream("logo.jpg")));
+        primaryStage.getIcons().add(new Image(this.getClass().getResourceAsStream("logo.png")));
         primaryStage.setResizable(false);
         
         // Setup scene and root

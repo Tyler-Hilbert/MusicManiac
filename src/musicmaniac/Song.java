@@ -1,6 +1,8 @@
 package musicmaniac;
 
-public class Song {
+import java.io.Serializable;
+
+public class Song implements Serializable{
     private String path;
     private String name;
     private int length;

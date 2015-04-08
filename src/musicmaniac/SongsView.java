@@ -1,6 +1,5 @@
 package musicmaniac;
 
-import java.io.File;
 import java.util.ArrayList;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -13,63 +12,36 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-
 /**
- * The main view for the application.
- * Loads the songs and saves them inside the action listener (in the loadSongs() method).
- * Instantiates the player pane.
- 
- * The application layout is a borderPane that is the root.
- * The top of the root is playerPane.
- * The center is a VBox, songsVBox that has all the songs.
- * Each song is shown as an songsHBox within VBox
+ * The view that has all of the songs loaded in it. 
+ * Includes the action listeners for playing a song when clicked on.
  */
-public class SongsView {
-    
-    PlayerPane playerPane; // The song playing pane
-    
-
-    public SongsView(Stage primaryStage) {
-        // Setup scene and root
-        BorderPane root = new BorderPane();
-        Scene scene = new Scene(root, 1000, 800);
-         
-        // Setup stage
-        primaryStage.setTitle("Music Maniac");
-        primaryStage.setScene(scene);
-        primaryStage.show();
-               
-        // Loads songs from dir
-        SongLoader loader = new SongLoader();
-        File dir = new File("D:\\Music\\Current");
-        ArrayList<Song> songs = loader.loadSongs(dir);
-        addSongsVBox(root, songs);
-        addPlayerPane(root, songs, scene);
-    }
-    
+public class SongsView {    
     /**
-     * Adds the VBox that has all the songs 
+     * Adds the VBox and ScrollPane that has all the songs 
+     * @param songs all the songs
+     * @param playerPane the song playing pane
+     * @return a ScrollPane that has all songs within it.
      */
-    private void addSongsVBox(BorderPane root, ArrayList<Song> songs) {
+    public ScrollPane getSongsPane(ArrayList<Song> songs, PlayerPane playerPane) {
         // Create vbox
         VBox songsVBox = new VBox();
         songsVBox.setPadding(new Insets(10));
         songsVBox.setSpacing(8);
         
+        addSongsToVBox(songsVBox, songs, playerPane);
+        
         // Create sp to hold vbox so you can scroll through songs
         ScrollPane sp = new ScrollPane();
-        sp.setContent(songsVBox);
-        root.setCenter(sp);
+        sp.setContent(songsVBox);        
         
-        root.setCenter(sp);
-        
-        addSongs(songsVBox, songs);
+        return sp;
     }
     
     /**
-     * adds the songs to the view.
+     * adds the songs HBoxs to the songsVBox.
      */
-    private void addSongs(VBox songsVBox, ArrayList<Song> songs) {
+    private void addSongsToVBox(VBox songsVBox, ArrayList<Song> songs, PlayerPane playerPane) {
         // Add to form
         for (int i = 0; i < songs.size(); i++) {
             Song song = songs.get(i);
@@ -89,24 +61,11 @@ public class SongsView {
             songHBox.getChildren().addAll(titleLabel, albumLabel, artistLabel, lengthLabel);
 
             // Add song action listener
-            songHBox.setOnMousePressed(new EventHandler<MouseEvent>() {
-                @Override
-                public void handle(MouseEvent me) {
-                    playerPane.playSong(song);
-                }
+            songHBox.setOnMousePressed((MouseEvent me) -> {
+                playerPane.playSong(song);
             });
             
             songsVBox.getChildren().add(songHBox);
         }
-    }
- 
- 
-    /**
-     * Adds the player pane that displays song and play/pause button
-     */
-    private void addPlayerPane(BorderPane root, ArrayList<Song> songs, Scene scene) {
-        playerPane = new PlayerPane(songs, scene);
-        root.setTop(playerPane);
-    }
-    
+    }    
 }

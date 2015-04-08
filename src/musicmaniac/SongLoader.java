@@ -6,6 +6,8 @@ import java.util.List;
 import org.jaudiotagger.audio.mp3.MP3AudioHeader;
 import org.jaudiotagger.audio.mp3.MP3File;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.ObjectOutputStream;
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
 import org.jaudiotagger.tag.FieldKey;
@@ -18,15 +20,21 @@ import org.jaudiotagger.tag.Tag;
 public class SongLoader {
     final private static List<String> ext = Arrays.asList(".mp3", ".wav", ".m4a"); // The compatiable file formats
     
-    /**
-     * Loads songs from a directory
-     * @param dir the directory to load from
-     * @return an arraylist of the loaded songs
-     */
-    public ArrayList<Song> loadSongs(File dir) {
-        ArrayList<Song> songs = new ArrayList<Song>();
-        loadDirectory(dir, songs);
-        return songs;
+
+    public ArrayList<Song> loadSongs() {
+        // Checks if the songs have already been loaded
+        if (new File(MusicManiac.dir, "\\loadedSongsData.tmp").exists()) {
+            SavedSongLoader loader = new SavedSongLoader();
+            return loader.loadSongs();
+            
+        } else {
+            ArrayList<Song> songs = new ArrayList<Song>();
+            loadDirectory(MusicManiac.dir, songs);
+
+            saveLoadedSongData(songs);
+
+            return songs;
+        }
     }
         
     /**
@@ -94,6 +102,22 @@ public class SongLoader {
 
             Song song = new Song(songFile.getPath(), title, artist, album, length);
             songs.add(song);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+    
+    /**
+     * Saves the data about the songs so they can be loaded quicker.
+     * @param songs the loaded songs
+     */
+    private void saveLoadedSongData(ArrayList<Song> songs) {
+        try {
+            File loadedSongsData = new File(MusicManiac.dir, "\\loadedSongsData.tmp");
+            FileOutputStream fos = new FileOutputStream(loadedSongsData);
+            ObjectOutputStream oos = new ObjectOutputStream(fos);
+            oos.writeObject(songs);
+            oos.close();
         } catch (Exception ex) {
             ex.printStackTrace();
         }

@@ -2,11 +2,15 @@ package musicmaniac;
 
 import java.io.File;
 import java.util.ArrayList;
-import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Control;
 import javafx.scene.control.Label;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
@@ -24,7 +28,7 @@ public class PlayerPane extends HBox {
     
     MediaPlayer mediaPlayer; // The audio playing component
     
-    public PlayerPane(ArrayList<Song> songs) {
+    public PlayerPane(ArrayList<Song> songs, Scene scene) {
         this.songs = songs;
         
         // Setup pane/view
@@ -36,43 +40,53 @@ public class PlayerPane extends HBox {
         // Add play / pause buttons and listeners
         playButton = new Button("Play");
         playButton.setPrefSize(100, 20);
-        playButton.setOnAction(new EventHandler<ActionEvent>() {
+        playButton.setOnMousePressed(new EventHandler<MouseEvent>() {
             @Override 
-            public void handle(ActionEvent e) {
-                if (mediaPlayer == null){
-                    playRandomSong();
-                } else if (mediaPlayer.getStatus() == MediaPlayer.Status.PLAYING) {
-                    mediaPlayer.pause();
-                    playButton.setText("Play");
-                } else if (mediaPlayer.getStatus() == MediaPlayer.Status.PAUSED) {
-                    mediaPlayer.play();
-                    playButton.setText("Pause");
-                }
+            public void handle(MouseEvent e) {
+                togglePlay();
             }
         });
+        playButton.setMaxWidth(Control.USE_PREF_SIZE);
+        playButton.setMinWidth(Control.USE_PREF_SIZE);
         
         // add playPreviousButton
         Button resetButton = new Button("Reset song");
         resetButton.setPrefSize(100, 20);
-        resetButton.setOnAction(new EventHandler<ActionEvent>() {
+        resetButton.setOnMousePressed(new EventHandler<MouseEvent>() {
             @Override 
-            public void handle(ActionEvent e) {
+            public void handle(MouseEvent e) {
                 mediaPlayer.seek(Duration.ZERO);
             }
         });
+        resetButton.setMaxWidth(Control.USE_PREF_SIZE);
+        resetButton.setMinWidth(Control.USE_PREF_SIZE);
         
         // add playNextButton
         Button playNextButton = new Button("Next song");
         playNextButton.setPrefSize(100, 20);
-        playNextButton.setOnAction(new EventHandler<ActionEvent>() {
+        playNextButton.setOnMousePressed(new EventHandler<MouseEvent>() {
             @Override 
-            public void handle(ActionEvent e) {
+            public void handle(MouseEvent e) {
                 playRandomSong();
             }
         });
-        
- 
+        playNextButton.setMaxWidth(Control.USE_PREF_SIZE);
+        playNextButton.setMinWidth(Control.USE_PREF_SIZE);
+       
         getChildren().addAll(resetButton, playButton, playNextButton, songLabel);
+        
+        
+        // Play/pause song when space bar is pressed
+        scene.setOnKeyTyped(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent ke) {
+                if (ke.getCode() != KeyCode.SPACE) {
+                    togglePlay();
+                }
+                
+                ke.consume();
+            }
+        });
     }
 
     
@@ -94,11 +108,27 @@ public class PlayerPane extends HBox {
         });
         
         playButton.setText("Pause");
-        songLabel.setText(song.getName());
+        songLabel.setText(song.getName() + "  --  " + song.getArtist());
     }
     
     private void playRandomSong() {
         int randIndex = (int)(Math.random() * songs.size());
         playSong(songs.get(randIndex));
+    }
+    
+    /**
+     * Toggles between play and pause.
+     * plays random song if nothing is playing
+     */
+    private void togglePlay() {
+        if (mediaPlayer == null){
+            playRandomSong();
+        } else if (mediaPlayer.getStatus() == MediaPlayer.Status.PLAYING) {
+            mediaPlayer.pause();
+            playButton.setText("Play");
+        } else if (mediaPlayer.getStatus() == MediaPlayer.Status.PAUSED) {
+            mediaPlayer.play();
+            playButton.setText("Pause");
+        }
     }
 }

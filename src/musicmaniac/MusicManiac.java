@@ -1,6 +1,7 @@
 package musicmaniac;
 
 import javafx.application.Application;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 /**
@@ -11,6 +12,9 @@ public class MusicManiac extends Application {
     
     @Override
     public void start(Stage primaryStage) {
+        primaryStage.getIcons().add(new Image(this.getClass().getResourceAsStream("logo.jpg")));
+        primaryStage.setResizable(false);
+        
         SongsView view = new SongsView(primaryStage);
     }
 
@@ -20,5 +24,4 @@ public class MusicManiac extends Application {
     public static void main(String[] args) {
         launch(args);
     }
-    
 }

@@ -33,6 +33,8 @@ public class SongsView {
         // Setup scene and root
         BorderPane root = new BorderPane();
         Scene scene = new Scene(root, 1000, 800);
+         
+        // Setup stage
         primaryStage.setTitle("Music Maniac");
         primaryStage.setScene(scene);
         primaryStage.show();
@@ -42,7 +44,7 @@ public class SongsView {
         File dir = new File("D:\\Music\\Current");
         ArrayList<Song> songs = loader.loadSongs(dir);
         addSongsVBox(root, songs);
-        addPlayerPane(root, songs);
+        addPlayerPane(root, songs, scene);
     }
     
     /**
@@ -102,8 +104,8 @@ public class SongsView {
     /**
      * Adds the player pane that displays song and play/pause button
      */
-    private void addPlayerPane(BorderPane root, ArrayList<Song> songs) {
-        playerPane = new PlayerPane(songs);
+    private void addPlayerPane(BorderPane root, ArrayList<Song> songs, Scene scene) {
+        playerPane = new PlayerPane(songs, scene);
         root.setTop(playerPane);
     }
     

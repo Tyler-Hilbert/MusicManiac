@@ -62,13 +62,12 @@ public class SongLoader {
             } else {
                 String title = songFile.getName();
                 String extension = title.substring(title.lastIndexOf("."));
-                title = title.substring(0, title.lastIndexOf(".")); // Remove file extension
                 
                 // Add song to songs list
                 if (extension.equals(".mp3")) {
-                    addMP3(songFile, title, songs);
+                    addMP3(songFile, songs);
                 } else if (extension.equals(".m4a")){
-                    addM4A(songFile, title, songs);
+                    addM4A(songFile, songs);
                 }
             }
         }
@@ -77,10 +76,9 @@ public class SongLoader {
     /**
      * Parses the meta data/details of the mp3 and adds it to the list of songs
      * @param songFile The mp3 file that will be added to the list
-     * @param title The title of the mp3
      * @param songs The current list of all songs. This is the list that will be added to.
      */
-    private void addMP3(File songFile, String title, ArrayList<Song> songs) {
+    private void addMP3(File songFile, ArrayList<Song> songs) {
         try {
             MP3File fileRead = (MP3File)AudioFileIO.read(songFile);
 
@@ -88,9 +86,16 @@ public class SongLoader {
             int length = audioHeader.getTrackLength();
 
             Tag fileTag = fileRead.getTag();
+            
             String artist = fileTag.getFirst(FieldKey.ARTIST);
             String album = fileTag.getFirst(FieldKey.ALBUM);
-
+            String title = fileTag.getFirst(FieldKey.TITLE);
+            // Take the filename if title isn't found
+            if (title.trim().isEmpty()) {
+                title = songFile.getName();
+                title = title.substring(0, title.lastIndexOf(".")); // Remove ext
+            }
+          
             songs.add(new Song(songFile.getPath(), title, artist, album, length));
 
         } catch (Exception ex) {
@@ -101,10 +106,9 @@ public class SongLoader {
     /**
      * Parses the meta data/details of the m4a and adds it to the list of songs
      * @param songFile The m4a file that will be added to the list
-     * @param title The title of the m4a
      * @param songs The current list of all songs. This is the list that will be added to.
      */
-    private void addM4A(File songFile, String title, ArrayList<Song> songs) {
+    private void addM4A(File songFile, ArrayList<Song> songs) {
         try {
             AudioFile audioFile = AudioFileIO.read(songFile);
             int length = audioFile.getAudioHeader().getTrackLength();
@@ -112,6 +116,12 @@ public class SongLoader {
             Tag tag = audioFile.getTag();
             String album = tag.getFirst(FieldKey.ALBUM);
             String artist = tag.getFirst(FieldKey.ARTIST);
+            String title = tag.getFirst(FieldKey.TITLE);
+            // Take the filename if title isn't found
+            if (title.trim().isEmpty()) {
+                title = songFile.getName();
+                title = title.substring(0, title.lastIndexOf(".")); // Remove ext
+            }
 
             Song song = new Song(songFile.getPath(), title, artist, album, length);
             songs.add(song);

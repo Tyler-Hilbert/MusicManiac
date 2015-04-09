@@ -3,12 +3,14 @@ package musicmaniac;
 import java.io.File;
 import java.util.ArrayList;
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -44,20 +46,43 @@ public class MusicManiac extends Application {
         // Loads songs
         SongLoader loader = new SongLoader();
         ArrayList<Song> songs = loader.loadSongs();
+       
         
         // Create PlayerPane
         PlayerPane playerPane = new PlayerPane(songs, scene);
         
-        // Add SongsView     
-        SongsView songsView = new SongsView();
-        ScrollPane songsPane = songsView.getSongsPane(songs, playerPane);
+        // Add SongsPane     
+        SongsPane songsPane = new SongsPane(songs, playerPane);
         root.setCenter(songsPane);
+        
+        // Add SearchPane
+        SearchPane searchPane = new SearchPane();
+        root.setBottom(searchPane);
+        searchPane.setOnKeyPressed(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent ke) {
+                if (ke.getCode() == KeyCode.ENTER) {
+                    SongSearch songSearch = new SongSearch();
+                    ArrayList<Song> foundSongs = songSearch.getSongs(songs, searchPane.getSearch());
+                    
+                    SongsPane songsPane = new SongsPane(foundSongs, playerPane);
+                    root.setCenter(songsPane);
+                    
+                    playerPane.setSongs(foundSongs);
+                }
+            }
+        });
         
         // Create menu
         Menu fileMenu = new Menu("File");
+        
         MenuItem refresh = new MenuItem("Refresh library");
         refresh.setOnAction(actionEvent -> refreshLibrary(root, playerPane));
         fileMenu.getItems().add(refresh);
+        
+        MenuItem search = new MenuItem("Search library");
+        search.setOnAction(actionEvent -> searchPane.requestFocus());
+        fileMenu.getItems().add(search);
         
         MenuBar menuBar = new MenuBar();
         menuBar.getMenus().add(fileMenu);
@@ -66,9 +91,7 @@ public class MusicManiac extends Application {
         VBox topBox = new VBox();
         topBox.getChildren().addAll(menuBar, playerPane);
         
-        root.setTop(topBox);
-
-
+        root.setTop(topBox);        
     }
     
     private void refreshLibrary(BorderPane root, PlayerPane playerPane) {
@@ -77,8 +100,7 @@ public class MusicManiac extends Application {
         ArrayList<Song> songs = loader.reloadSongs();
     
         // Add songs view
-        SongsView songsView = new SongsView();
-        ScrollPane songsPane = songsView.getSongsPane(songs, playerPane);
+        SongsPane songsPane = new SongsPane(songs, playerPane);
         root.setCenter(songsPane);
     }
       

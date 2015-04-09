@@ -131,4 +131,8 @@ public class PlayerPane extends HBox {
             playButton.setText("Pause");
         }
     }
+    
+    public void setSongs(ArrayList<Song> songs) {
+        this.songs = songs;
+    }
 }

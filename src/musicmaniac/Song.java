@@ -17,6 +17,23 @@ public class Song implements Serializable{
         this.length = length;
     }
     
+    
+    /**
+     * Checks if the song contains the string looked for
+     * @param searchString The token being looked for
+     * @return if the song has the token being looked for
+     */
+    public Boolean contains(String searchString) {
+        if (name.toLowerCase().contains(searchString))
+            return true;
+        else if (artist.toLowerCase().contains(searchString))
+            return true;
+        else if (album.toLowerCase().contains(searchString))
+            return true;
+        else
+            return false;
+    }
+    
     public String getPath() {
         return path;
     }
@@ -36,4 +53,6 @@ public class Song implements Serializable{
     public String getAlbum() {
         return album;
     }
+    
+
 }

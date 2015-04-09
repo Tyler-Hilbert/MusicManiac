@@ -18,9 +18,15 @@ import org.jaudiotagger.tag.Tag;
  * Loads the songs
  */
 public class SongLoader {
+    
     final private static List<String> ext = Arrays.asList(".mp3", ".wav", ".m4a"); // The compatiable file formats
     
 
+    /**
+     * Loads songs.
+     * If songs have previously been loaded it quick loads it from the file,
+     *  else wise it reloads each song individually from the directory.
+     */
     public ArrayList<Song> loadSongs() {
         // Checks if the songs have already been loaded
         if (new File(MusicManiac.dir, "\\loadedSongsData.tmp").exists()) {
@@ -28,13 +34,20 @@ public class SongLoader {
             return loader.loadSongs();
             
         } else {
-            ArrayList<Song> songs = new ArrayList<Song>();
-            loadDirectory(MusicManiac.dir, songs);
-
-            saveLoadedSongData(songs);
-
-            return songs;
+            return reloadSongs();
         }
+    }
+    
+    /**
+     * Reloads each song individually from the directory.
+     */
+    public ArrayList<Song> reloadSongs() {
+        ArrayList<Song> songs = new ArrayList<Song>();
+        loadDirectory(MusicManiac.dir, songs);
+
+        saveLoadedSongData(songs);  
+
+        return songs;
     }
         
     /**

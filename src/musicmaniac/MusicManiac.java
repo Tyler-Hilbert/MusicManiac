@@ -4,9 +4,13 @@ import java.io.File;
 import java.util.ArrayList;
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 /**
@@ -41,11 +45,38 @@ public class MusicManiac extends Application {
         SongLoader loader = new SongLoader();
         ArrayList<Song> songs = loader.loadSongs();
         
-        // Add PlayerPane
+        // Create PlayerPane
         PlayerPane playerPane = new PlayerPane(songs, scene);
-        root.setTop(playerPane);
         
         // Add SongsView     
+        SongsView songsView = new SongsView();
+        ScrollPane songsPane = songsView.getSongsPane(songs, playerPane);
+        root.setCenter(songsPane);
+        
+        // Create menu
+        Menu fileMenu = new Menu("File");
+        MenuItem refresh = new MenuItem("Refresh library");
+        refresh.setOnAction(actionEvent -> refreshLibrary(root, playerPane));
+        fileMenu.getItems().add(refresh);
+        
+        MenuBar menuBar = new MenuBar();
+        menuBar.getMenus().add(fileMenu);
+        
+        // Add top box (the menu and PlayerPane)
+        VBox topBox = new VBox();
+        topBox.getChildren().addAll(menuBar, playerPane);
+        
+        root.setTop(topBox);
+
+
+    }
+    
+    private void refreshLibrary(BorderPane root, PlayerPane playerPane) {
+        // Load songs
+        SongLoader loader = new SongLoader();
+        ArrayList<Song> songs = loader.reloadSongs();
+    
+        // Add songs view
         SongsView songsView = new SongsView();
         ScrollPane songsPane = songsView.getSongsPane(songs, playerPane);
         root.setCenter(songsPane);

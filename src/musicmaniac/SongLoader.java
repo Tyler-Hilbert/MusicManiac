@@ -18,10 +18,6 @@ import org.jaudiotagger.tag.Tag;
  * Loads the songs
  */
 public class SongLoader {
-    
-    final private static List<String> ext = Arrays.asList(".mp3", ".wav", ".m4a"); // The compatiable file formats
-    
-
     /**
      * Loads songs.
      * If songs have previously been loaded it quick loads it from the file,

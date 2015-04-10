@@ -3,7 +3,6 @@ package musicmaniac;
 import java.io.File;
 import java.util.ArrayList;
 import javafx.event.EventHandler;
-import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Control;
@@ -24,12 +23,13 @@ public class PlayerPane extends HBox {
     Button playButton; // Toggles if the song is playing
     Label songLabel = new Label(); // Displays song name
     
-    ArrayList<Song> songs; // The list of all songs
+    ArrayList<Song> queuedSongsList; // The songs currently on the screen. Have it queued for if a new song is clicked on
+    SongsList songsList = new SongsList(); // List of all the songs in the order they will be played
     
     MediaPlayer mediaPlayer; // The audio playing component
     
     public PlayerPane(ArrayList<Song> songs, Scene scene) {
-        this.songs = songs;
+        queuedSongsList = songs;
         
         this.getStyleClass().add("player-pane");
         songLabel.getStyleClass().add("playing-song-label");
@@ -46,17 +46,21 @@ public class PlayerPane extends HBox {
         playButton.setMaxWidth(Control.USE_PREF_SIZE);
         playButton.setMinWidth(Control.USE_PREF_SIZE);
         
-        // add playPreviousButton
-        Button resetButton = new Button("Reset song");
-        resetButton.setPrefSize(100, 20);
-        resetButton.setOnMousePressed(new EventHandler<MouseEvent>() {
+        // add backButton
+        Button backButton = new Button("Back");
+        backButton.setPrefSize(100, 20);
+        backButton.setOnMousePressed(new EventHandler<MouseEvent>() {
             @Override 
             public void handle(MouseEvent e) {
-                mediaPlayer.seek(Duration.ZERO);
+                if (mediaPlayer.currentTimeProperty().get().lessThan(new Duration(5000))) {
+                    playPreviousSong();
+                } else {
+                    mediaPlayer.seek(Duration.ZERO);
+                }
             }
         });
-        resetButton.setMaxWidth(Control.USE_PREF_SIZE);
-        resetButton.setMinWidth(Control.USE_PREF_SIZE);
+        backButton.setMaxWidth(Control.USE_PREF_SIZE);
+        backButton.setMinWidth(Control.USE_PREF_SIZE);
         
         // add playNextButton
         Button playNextButton = new Button("Next song");
@@ -64,13 +68,13 @@ public class PlayerPane extends HBox {
         playNextButton.setOnMousePressed(new EventHandler<MouseEvent>() {
             @Override 
             public void handle(MouseEvent e) {
-                playRandomSong();
+                playNextSong();
             }
         });
         playNextButton.setMaxWidth(Control.USE_PREF_SIZE);
         playNextButton.setMinWidth(Control.USE_PREF_SIZE);
        
-        getChildren().addAll(resetButton, playButton, playNextButton, songLabel);
+        getChildren().addAll(backButton, playButton, playNextButton, songLabel);
         
         
         // Play/pause song when space bar is pressed
@@ -85,9 +89,16 @@ public class PlayerPane extends HBox {
             }
         });
     }
-
     
-    public void playSong(Song song) {
+    private void playNextSong() {
+        playSong(songsList.getNextSong());
+    }
+    
+    private void playPreviousSong() {
+        playSong(songsList.getPreviousSong());
+    }
+    
+    private void playSong(Song song) {   
         // stop current player
         if (mediaPlayer != null) {
             mediaPlayer.stop();
@@ -100,7 +111,7 @@ public class PlayerPane extends HBox {
         mediaPlayer.setOnEndOfMedia(new Runnable() {
             @Override
             public void run() {
-                playRandomSong();
+                playNextSong();
             }
         });
         
@@ -108,18 +119,23 @@ public class PlayerPane extends HBox {
         songLabel.setText(song.getName() + "  --  " + song.getArtist());
     }
     
-    private void playRandomSong() {
-        int randIndex = (int)(Math.random() * songs.size());
-        playSong(songs.get(randIndex));
+    public void playSelectedSong(Song song) {        
+        songsList = new SongsList(queuedSongsList);
+        songsList.startSongsList();
+        songsList.startPlaying(song);
+        
+        playSong(song);
     }
-    
+       
     /**
      * Toggles between play and pause.
      * plays random song if nothing is playing
      */
     private void togglePlay() {
         if (mediaPlayer == null){
-            playRandomSong();
+            songsList = new SongsList(queuedSongsList);
+            songsList.startSongsList();
+            playNextSong();
         } else if (mediaPlayer.getStatus() == MediaPlayer.Status.PLAYING) {
             mediaPlayer.pause();
             playButton.setText("Play");
@@ -129,7 +145,8 @@ public class PlayerPane extends HBox {
         }
     }
     
+    
     public void setSongs(ArrayList<Song> songs) {
-        this.songs = songs;
+        queuedSongsList = songs;
     }
 }

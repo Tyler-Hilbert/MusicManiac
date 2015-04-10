@@ -7,7 +7,6 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 
 /**
  * The view that has all of the songs loaded in it. 
@@ -53,7 +52,7 @@ public class SongsPane extends ScrollPane{
 
             // Add song action listener
             songHBox.setOnMousePressed((MouseEvent me) -> {
-                playerPane.playSong(song);
+                playerPane.playSelectedSong(song);
             });
             
             songsVBox.getChildren().add(songHBox);

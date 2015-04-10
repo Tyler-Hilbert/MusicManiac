@@ -7,6 +7,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 
 /**
  * The view that has all of the songs loaded in it. 
@@ -16,14 +17,14 @@ import javafx.scene.layout.VBox;
 public class SongsPane extends ScrollPane{
     
     public SongsPane(ArrayList<Song> songs, PlayerPane playerPane) {
+        this.getStyleClass().add("songs-pane");
+        
         // Create vbox
         VBox songsVBox = new VBox();
         songsVBox.setPadding(new Insets(10));
         songsVBox.setSpacing(8);
-        
         addSongsToVBox(songsVBox, songs, playerPane);
-        
-        this.setContent(songsVBox);        
+        this.setContent(songsVBox);    
     }
     
     
@@ -36,7 +37,8 @@ public class SongsPane extends ScrollPane{
             Song song = songs.get(i);
             
             HBox songHBox = new HBox();
-            
+            songHBox.getStyleClass().add("song-hbox");
+
             // Create labels
             Label titleLabel = new Label(song.getName());
             Label lengthLabel = new Label(Util.secondsToMinutes(song.getLength()));

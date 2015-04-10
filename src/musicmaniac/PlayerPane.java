@@ -31,11 +31,8 @@ public class PlayerPane extends HBox {
     public PlayerPane(ArrayList<Song> songs, Scene scene) {
         this.songs = songs;
         
-        // Setup pane/view
-        setPadding(new Insets(15, 12, 15, 12));
-        setSpacing(10);
-        setStyle("-fx-background-color: #0099CC;");
-
+        this.getStyleClass().add("player-pane");
+        songLabel.getStyleClass().add("playing-song-label");
         
         // Add play / pause buttons and listeners
         playButton = new Button("Play");

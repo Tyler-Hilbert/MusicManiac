@@ -37,6 +37,7 @@ public class MusicManiac extends Application {
         // Setup scene and root
         BorderPane root = new BorderPane();
         Scene scene = new Scene(root, 1000, 800);
+        scene.getStylesheets().add("resources/css/style.css");
          
         // Setup stage
         primaryStage.setTitle("Music Maniac");

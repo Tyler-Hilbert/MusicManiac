@@ -4,9 +4,9 @@ import java.io.File;
 import java.util.ArrayList;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Control;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -20,7 +20,7 @@ import javafx.util.Duration;
  */
 public class PlayerPane extends HBox {
     
-    Button playButton; // Toggles if the song is playing
+    ImageView playButton; // Toggles if the song is playing
     Label songLabel = new Label(); // Displays song name
     
     ArrayList<Song> queuedSongsList; // The songs currently on the screen. Have it queued for if a new song is clicked on
@@ -35,20 +35,21 @@ public class PlayerPane extends HBox {
         songLabel.getStyleClass().add("playing-song-label");
         
         // Add play / pause buttons and listeners
-        playButton = new Button("Play");
-        playButton.setPrefSize(100, 20);
+        Image playImg = new Image(MusicManiac.class.getResourceAsStream("/resources/img/play.png"));
+        playButton = new ImageView(playImg);
+        playButton.setPickOnBounds(true);
         playButton.setOnMousePressed(new EventHandler<MouseEvent>() {
             @Override 
             public void handle(MouseEvent e) {
                 togglePlay();
             }
         });
-        playButton.setMaxWidth(Control.USE_PREF_SIZE);
-        playButton.setMinWidth(Control.USE_PREF_SIZE);
+        
         
         // add backButton
-        Button backButton = new Button("Back");
-        backButton.setPrefSize(100, 20);
+        Image backImg = new Image(MusicManiac.class.getResourceAsStream("/resources/img/back.png"));
+        ImageView backButton = new ImageView(backImg);
+        backButton.setPickOnBounds(true);
         backButton.setOnMousePressed(new EventHandler<MouseEvent>() {
             @Override 
             public void handle(MouseEvent e) {
@@ -59,35 +60,20 @@ public class PlayerPane extends HBox {
                 }
             }
         });
-        backButton.setMaxWidth(Control.USE_PREF_SIZE);
-        backButton.setMinWidth(Control.USE_PREF_SIZE);
+
         
         // add playNextButton
-        Button playNextButton = new Button("Next song");
-        playNextButton.setPrefSize(100, 20);
-        playNextButton.setOnMousePressed(new EventHandler<MouseEvent>() {
+        Image nextImg = new Image(MusicManiac.class.getResourceAsStream("/resources/img/forward.png"));
+        ImageView nextButton = new ImageView(nextImg);
+        nextButton.setPickOnBounds(true); 
+        nextButton.setOnMousePressed(new EventHandler<MouseEvent>() {
             @Override 
             public void handle(MouseEvent e) {
                 playNextSong();
             }
         });
-        playNextButton.setMaxWidth(Control.USE_PREF_SIZE);
-        playNextButton.setMinWidth(Control.USE_PREF_SIZE);
        
-        getChildren().addAll(backButton, playButton, playNextButton, songLabel);
-        
-        
-        // Play/pause song when space bar is pressed
-        scene.setOnKeyTyped(new EventHandler<KeyEvent>() {
-            @Override
-            public void handle(KeyEvent ke) {
-                if (ke.getCode() != KeyCode.SPACE) {
-                    togglePlay();
-                }
-                
-                ke.consume();
-            }
-        });
+        getChildren().addAll(backButton, playButton, nextButton, songLabel);
     }
     
     private void playNextSong() {
@@ -105,8 +91,15 @@ public class PlayerPane extends HBox {
         }
         
         Media media = new Media(new File(song.getPath()).toURI().toString());
-        mediaPlayer = new MediaPlayer(media);
-        mediaPlayer.play();
+        
+        // Play song if the previous song was playing or ready
+        if (mediaPlayer == null || mediaPlayer.getStatus() == MediaPlayer.Status.PLAYING) {
+            mediaPlayer = new MediaPlayer(media);
+            mediaPlayer.play();
+        } else {
+            mediaPlayer = new MediaPlayer(media);
+            mediaPlayer.pause();
+        }
         
         mediaPlayer.setOnEndOfMedia(new Runnable() {
             @Override
@@ -115,7 +108,6 @@ public class PlayerPane extends HBox {
             }
         });
         
-        playButton.setText("Pause");
         songLabel.setText(song.getName() + "  --  " + song.getArtist());
     }
     
@@ -133,15 +125,22 @@ public class PlayerPane extends HBox {
      */
     private void togglePlay() {
         if (mediaPlayer == null){
+            // Generate songs list
             songsList = new SongsList(queuedSongsList);
             songsList.startSongsList();
             playNextSong();
+            Image playImg = new Image(MusicManiac.class.getResourceAsStream("/resources/img/pause.png"));
+            playButton.setImage(playImg);
         } else if (mediaPlayer.getStatus() == MediaPlayer.Status.PLAYING) {
+            // Pause
             mediaPlayer.pause();
-            playButton.setText("Play");
-        } else if (mediaPlayer.getStatus() == MediaPlayer.Status.PAUSED) {
+            Image playImg = new Image(MusicManiac.class.getResourceAsStream("/resources/img/play.png"));
+            playButton.setImage(playImg);
+        } else if (mediaPlayer.getStatus() == MediaPlayer.Status.PAUSED || mediaPlayer.getStatus() == MediaPlayer.Status.READY) {
+            // Play
             mediaPlayer.play();
-            playButton.setText("Pause");
+            Image playImg = new Image(MusicManiac.class.getResourceAsStream("/resources/img/pause.png"));
+            playButton.setImage(playImg);
         }
     }
     

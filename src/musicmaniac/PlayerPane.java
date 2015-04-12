@@ -7,8 +7,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.media.Media;
@@ -93,9 +91,11 @@ public class PlayerPane extends HBox {
         Media media = new Media(new File(song.getPath()).toURI().toString());
         
         // Play song if the previous song was playing or ready
-        if (mediaPlayer == null || mediaPlayer.getStatus() == MediaPlayer.Status.PLAYING) {
+        if (mediaPlayer == null || mediaPlayer.getStatus() == MediaPlayer.Status.PLAYING || mediaPlayer.getStatus() == MediaPlayer.Status.READY) {
             mediaPlayer = new MediaPlayer(media);
             mediaPlayer.play();
+           Image playImg = new Image(MusicManiac.class.getResourceAsStream("/resources/img/pause.png"));
+            playButton.setImage(playImg);
         } else {
             mediaPlayer = new MediaPlayer(media);
             mediaPlayer.pause();
@@ -111,10 +111,21 @@ public class PlayerPane extends HBox {
         songLabel.setText(song.getName() + "  --  " + song.getArtist());
     }
     
+    /**
+     * Plays the song that was selected from the SongsPane.
+     * @param song the song that was selected to be played.
+     */
     public void playSelectedSong(Song song) {        
         songsList = new SongsList(queuedSongsList);
         songsList.startSongsList();
         songsList.startPlaying(song);
+        
+        Image playImg = new Image(MusicManiac.class.getResourceAsStream("/resources/img/pause.png"));
+        playButton.setImage(playImg);
+        if (mediaPlayer != null) {
+            mediaPlayer.stop();
+            mediaPlayer = null;
+        }
         
         playSong(song);
     }
@@ -129,23 +140,39 @@ public class PlayerPane extends HBox {
             songsList = new SongsList(queuedSongsList);
             songsList.startSongsList();
             playNextSong();
-            Image playImg = new Image(MusicManiac.class.getResourceAsStream("/resources/img/pause.png"));
-            playButton.setImage(playImg);
+
         } else if (mediaPlayer.getStatus() == MediaPlayer.Status.PLAYING) {
             // Pause
             mediaPlayer.pause();
             Image playImg = new Image(MusicManiac.class.getResourceAsStream("/resources/img/play.png"));
             playButton.setImage(playImg);
+            
         } else if (mediaPlayer.getStatus() == MediaPlayer.Status.PAUSED || mediaPlayer.getStatus() == MediaPlayer.Status.READY) {
             // Play
             mediaPlayer.play();
-            Image playImg = new Image(MusicManiac.class.getResourceAsStream("/resources/img/pause.png"));
-            playButton.setImage(playImg);
         }
     }
     
     
+    /**
+     * Sets the current songs being shown in the SongsPane
+     * @param songs The songs being shown in the SongsPane.
+     */
     public void setSongs(ArrayList<Song> songs) {
         queuedSongsList = songs;
+    }
+    
+    /**
+     * Stops the music playing.
+     * Is called when loading a new directory.
+    */
+    public void stop() {
+        if (mediaPlayer != null) {
+            mediaPlayer.stop();
+            mediaPlayer = null;
+            songLabel.setText("");
+            Image playImg = new Image(MusicManiac.class.getResourceAsStream("/resources/img/play.png"));
+            playButton.setImage(playImg);
+        }
     }
 }

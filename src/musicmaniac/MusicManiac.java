@@ -1,6 +1,9 @@
 package musicmaniac;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import javafx.application.Application;
 import javafx.event.EventHandler;
@@ -13,6 +16,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 
 /**
@@ -27,11 +31,12 @@ import javafx.stage.Stage;
  */
 public class MusicManiac extends Application {
     
-    public static File dir = new File("D:\\Music\\Current"); // The dir of the songs and any saved files
+    public static File dir; // The dir of the songs 
+
     
     @Override
-    public void start(Stage primaryStage) {
-        primaryStage.getIcons().add(new Image(this.getClass().getResourceAsStream("logo.png")));
+    public void start(Stage primaryStage) {     
+        primaryStage.getIcons().add(new Image(this.getClass().getResourceAsStream("/resources/img/logo.png")));
         primaryStage.setResizable(false);
         
         // Setup scene and root
@@ -44,7 +49,13 @@ public class MusicManiac extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
         
+        
         // Loads songs
+        SongDirSelector dirSelector = new SongDirSelector();
+        dir = dirSelector.loadDefaultDirectory(primaryStage);
+        if (!dir.exists()) { // Close program if can't get a valid songs directory.
+            return;
+        }
         SongLoader loader = new SongLoader();
         ArrayList<Song> songs = loader.loadSongs();
        
@@ -81,6 +92,10 @@ public class MusicManiac extends Application {
         refresh.setOnAction(actionEvent -> refreshLibrary(root, playerPane));
         fileMenu.getItems().add(refresh);
         
+        MenuItem selectFolder = new MenuItem("Select folder");
+        selectFolder.setOnAction(actionEvent -> selectFolder(root, playerPane, primaryStage));
+        fileMenu.getItems().add(selectFolder);
+        
         MenuItem search = new MenuItem("Search library");
         search.setOnAction(actionEvent -> searchPane.requestFocus());
         fileMenu.getItems().add(search);
@@ -95,6 +110,9 @@ public class MusicManiac extends Application {
         root.setTop(topBox);        
     }
     
+    /**
+     * Reloads all the songs from the directory (static class variable dir).
+     */
     private void refreshLibrary(BorderPane root, PlayerPane playerPane) {
         // Load songs
         SongLoader loader = new SongLoader();
@@ -103,7 +121,27 @@ public class MusicManiac extends Application {
         // Add songs view
         SongsPane songsPane = new SongsPane(songs, playerPane);
         root.setCenter(songsPane);
+        
+        playerPane.setSongs(songs);
     }
+    
+    /**
+     * Select the directory that contains the songs that should be displayed.
+     */
+    private void selectFolder(BorderPane root, PlayerPane playerPane, Stage primaryStage) {        
+        playerPane.stop();
+        
+        SongDirSelector dirSelector = new SongDirSelector();
+        File selectedDir = dirSelector.selectNewDir(primaryStage);
+        
+        // Check if valid directory was choosen
+        if (selectedDir.exists()) {
+            dir = selectedDir;
+            refreshLibrary(root, playerPane);
+        }
+    }
+    
+ 
       
     /**
      * @param args the command line arguments

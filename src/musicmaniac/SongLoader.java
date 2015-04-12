@@ -57,6 +57,12 @@ public class SongLoader {
                 loadDirectory(songFile, songs);
             } else {
                 String title = songFile.getName();
+                
+                // Check for file without file extension
+                if (!title.contains(".")) {
+                    break;
+                }
+                
                 String extension = title.substring(title.lastIndexOf("."));
                 
                 // Add song to songs list

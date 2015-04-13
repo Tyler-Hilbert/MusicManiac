@@ -51,7 +51,7 @@ public class PlayerPane extends HBox {
         backButton.setOnMousePressed(new EventHandler<MouseEvent>() {
             @Override 
             public void handle(MouseEvent e) {
-                if (mediaPlayer.currentTimeProperty().get().lessThan(new Duration(5000))) {
+                if (mediaPlayer == null || mediaPlayer.currentTimeProperty().get().lessThan(new Duration(5000))) {
                     previousSong();
                 } else {
                     mediaPlayer.seek(Duration.ZERO);
@@ -78,8 +78,9 @@ public class PlayerPane extends HBox {
      * Sets the MediaPlayer to the next song
      */
     private void nextSong() {
-        // Check if the song should be played or paused
-        if (mediaPlayer == null || mediaPlayer.getStatus().equals(MediaPlayer.Status.PLAYING)) {
+        if (mediaPlayer == null) {
+            startPlayingSongsList();
+        } else if (mediaPlayer.getStatus().equals(MediaPlayer.Status.PLAYING)) {
             playSong(songsList.getNextSong(), true);
         } else {
             playSong(songsList.getNextSong(), false);
@@ -90,8 +91,9 @@ public class PlayerPane extends HBox {
      * Sets the MediaPlayer to the previous song
      */
     private void previousSong() {
-        // Check if the song should be played or paused
-        if (mediaPlayer == null || mediaPlayer.getStatus().equals(MediaPlayer.Status.PLAYING)) {
+        if (mediaPlayer == null) {
+            startPlayingSongsList();
+        } else if (mediaPlayer.getStatus().equals(MediaPlayer.Status.PLAYING)) {
             playSong(songsList.getPreviousSong(), true);
         } else {
             playSong(songsList.getPreviousSong(), false);
@@ -161,10 +163,7 @@ public class PlayerPane extends HBox {
      */
     private void togglePlay() {
         if (mediaPlayer == null) {
-            // Generate songs list and play songs
-            songsList = new SongsList(queuedSongsList);
-            songsList.startSongsList();
-            nextSong();
+            startPlayingSongsList();
 
         } else if (mediaPlayer.getStatus() == MediaPlayer.Status.PLAYING) {
             // Pause
@@ -178,6 +177,16 @@ public class PlayerPane extends HBox {
             Image playImg = new Image(MusicManiac.class.getResourceAsStream("/resources/img/pause.png"));
             playButton.setImage(playImg);
         }
+    }
+    
+    /**
+     * Generate songs list and start playing
+     */
+    private void startPlayingSongsList() {
+        // Generate songs list and play songs
+        songsList = new SongsList(queuedSongsList);
+        songsList.startSongsList();
+        playSelectedSong(songsList.getNextSong());
     }
     
     

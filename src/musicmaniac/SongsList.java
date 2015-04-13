@@ -7,7 +7,7 @@ import java.util.Random;
 
 public class SongsList extends ArrayList<Song> {
     
-    int currentSong = -1;
+    int currentSong = -1; // Index of the song playing in the list
     
     public SongsList() {
         super();
@@ -37,7 +37,11 @@ public class SongsList extends ArrayList<Song> {
         return this.get(currentSong);
     }
     
-    public void startPlaying(Song song) {
+    /**
+     * Set the song in the songs list that is playing
+     * @param song the song that is being played
+     */
+    public void setPlayingSong(Song song) {
         for (int i = 0; i < this.size(); i++) {
             if (song == this.get(i)) {
                 currentSong = i;

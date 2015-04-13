@@ -52,7 +52,7 @@ public class PlayerPane extends HBox {
             @Override 
             public void handle(MouseEvent e) {
                 if (mediaPlayer.currentTimeProperty().get().lessThan(new Duration(5000))) {
-                    playPreviousSong();
+                    previousSong();
                 } else {
                     mediaPlayer.seek(Duration.ZERO);
                 }
@@ -67,44 +67,69 @@ public class PlayerPane extends HBox {
         nextButton.setOnMousePressed(new EventHandler<MouseEvent>() {
             @Override 
             public void handle(MouseEvent e) {
-                playNextSong();
+                nextSong();
             }
         });
        
         getChildren().addAll(backButton, playButton, nextButton, songLabel);
     }
     
-    private void playNextSong() {
-        playSong(songsList.getNextSong());
+    /**
+     * Sets the MediaPlayer to the next song
+     */
+    private void nextSong() {
+        // Check if the song should be played or paused
+        if (mediaPlayer == null || mediaPlayer.getStatus().equals(MediaPlayer.Status.PLAYING)) {
+            playSong(songsList.getNextSong(), true);
+        } else {
+            playSong(songsList.getNextSong(), false);
+        }
     }
     
-    private void playPreviousSong() {
-        playSong(songsList.getPreviousSong());
+    /**
+     * Sets the MediaPlayer to the previous song
+     */
+    private void previousSong() {
+        // Check if the song should be played or paused
+        if (mediaPlayer == null || mediaPlayer.getStatus().equals(MediaPlayer.Status.PLAYING)) {
+            playSong(songsList.getPreviousSong(), true);
+        } else {
+            playSong(songsList.getPreviousSong(), false);
+        }
     }
     
-    private void playSong(Song song) {   
+    /**
+     * Plays the passed song and queues the next song.
+     * @param song The song to be played
+     * @param playSong if the song should start playing. False means the song will be paused.
+     */
+    private void playSong(Song song, boolean playSong) {   
         // stop current player
         if (mediaPlayer != null) {
             mediaPlayer.stop();
         }
         
         Media media = new Media(new File(song.getPath()).toURI().toString());
-        
-        // Play song if the previous song was playing or ready
-        if (mediaPlayer == null || mediaPlayer.getStatus() == MediaPlayer.Status.PLAYING || mediaPlayer.getStatus() == MediaPlayer.Status.READY) {
-            mediaPlayer = new MediaPlayer(media);
+        mediaPlayer = new MediaPlayer(media);
+
+        // Set the song as playing or paused
+        if (playSong) {
             mediaPlayer.play();
+            
            Image playImg = new Image(MusicManiac.class.getResourceAsStream("/resources/img/pause.png"));
             playButton.setImage(playImg);
         } else {
-            mediaPlayer = new MediaPlayer(media);
             mediaPlayer.pause();
+            
+           Image playImg = new Image(MusicManiac.class.getResourceAsStream("/resources/img/play.png"));
+           playButton.setImage(playImg);
         }
         
+        // Set the next song to be played
         mediaPlayer.setOnEndOfMedia(new Runnable() {
             @Override
             public void run() {
-                playNextSong();
+                nextSong();
             }
         });
         
@@ -115,31 +140,31 @@ public class PlayerPane extends HBox {
      * Plays the song that was selected from the SongsPane.
      * @param song the song that was selected to be played.
      */
-    public void playSelectedSong(Song song) {        
+    public void playSelectedSong(Song song) { 
+        // Set up the next songs that are going to be played
         songsList = new SongsList(queuedSongsList);
         songsList.startSongsList();
-        songsList.startPlaying(song);
+        songsList.setPlayingSong(song); // Sets the current playing song in the list
         
-        Image playImg = new Image(MusicManiac.class.getResourceAsStream("/resources/img/pause.png"));
-        playButton.setImage(playImg);
+       // Stop current song and set mediaPlayer to null so playSong() will play the selected song.
         if (mediaPlayer != null) {
             mediaPlayer.stop();
             mediaPlayer = null;
         }
         
-        playSong(song);
+        playSong(song, true);
     }
        
     /**
      * Toggles between play and pause.
-     * plays random song if nothing is playing
+     * starts playing through songs list.
      */
     private void togglePlay() {
-        if (mediaPlayer == null){
-            // Generate songs list
+        if (mediaPlayer == null) {
+            // Generate songs list and play songs
             songsList = new SongsList(queuedSongsList);
             songsList.startSongsList();
-            playNextSong();
+            nextSong();
 
         } else if (mediaPlayer.getStatus() == MediaPlayer.Status.PLAYING) {
             // Pause
@@ -147,9 +172,11 @@ public class PlayerPane extends HBox {
             Image playImg = new Image(MusicManiac.class.getResourceAsStream("/resources/img/play.png"));
             playButton.setImage(playImg);
             
-        } else if (mediaPlayer.getStatus() == MediaPlayer.Status.PAUSED || mediaPlayer.getStatus() == MediaPlayer.Status.READY) {
+        } else {
             // Play
             mediaPlayer.play();
+            Image playImg = new Image(MusicManiac.class.getResourceAsStream("/resources/img/pause.png"));
+            playButton.setImage(playImg);
         }
     }
     

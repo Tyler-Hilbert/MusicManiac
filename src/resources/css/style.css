@@ -31,7 +31,7 @@
 .player-pane {
     -fx-padding: 15 12 15 12;
     -fx-spacing: 10;
-    -fx-background-color: #002447;
+    -fx-background-color: #660000;
 }
 
 .playing-song-label {
@@ -48,7 +48,7 @@
 }
 
 .menu-item:focused .label {
-    -fx-text-fill: blue;
+    -fx-text-fill: #2A0000;
 }
 
 .context-menu {
@@ -59,7 +59,7 @@
 }
 
 .menu-bar {
-    -fx-background-color: black;
+    -fx-background-color: #2A0000;
 }
 
 .menu-bar .label {

@@ -1,8 +1,6 @@
 package musicmaniac;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import org.jaudiotagger.audio.mp3.MP3AudioHeader;
 import org.jaudiotagger.audio.mp3.MP3File;
 import java.io.File;
@@ -21,14 +19,14 @@ public class SongLoader {
     /**
      * Loads songs.
      * If songs have previously been loaded it quick loads it from the file,
-     *  else wise it reloads each song individually from the directory.
+     *  other wise it reloads each song individually from the directory.
      */
     public ArrayList<Song> loadSongs() {
         // Checks if the songs have already been loaded
-        if (new File(MusicManiac.dir, "\\loadedSongsData.tmp").exists()) {
+        File file = new File(MusicManiac.dir, "\\loadedSongsData.tmp");
+        if (file.exists()) {
             SavedSongLoader loader = new SavedSongLoader();
-            return loader.loadSongs();
-            
+            return loader.loadSongs(file.toString());
         } else {
             return reloadSongs();
         }

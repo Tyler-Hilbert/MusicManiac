@@ -41,3 +41,28 @@ $RECYCLE.BIN/
 Network Trash Folder
 Temporary Items
 .apdisk
+todo.txt
+*.xml
+build/built-jar.properties
+*.class
+build/classes/resources/css/style.css
+*.jar
+dist/MusicManiac.html
+*.jnlp
+dist/web-files/error.png
+dist/web-files/get_javafx.png
+*.gif
+*.mf
+nbproject/project.properties
+*.properties
+dist/web-files/upgrade_javafx.png
+dist/web-files/upgrade_java.png
+src/resources/config/dir.dat
+*.dat
+build/classes/resources/img/back.png
+build/classes/resources/img/pause.png
+dist/web-files/get_java.png
+build/classes/resources/img/forward.png
+dist/web-files/dtjava.js
+build/classes/resources/img/logo.png
+dist/web-files/javafx-chrome.png

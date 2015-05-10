@@ -1,9 +1,6 @@
 package musicmaniac;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import javafx.application.Application;
 import javafx.event.EventHandler;
@@ -16,7 +13,6 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
-import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 
 /**
@@ -50,7 +46,7 @@ public class MusicManiac extends Application {
         primaryStage.show();
         
         
-        // Loads songs
+        // Loads songs and playlists
         SongDirSelector dirSelector = new SongDirSelector();
         dir = dirSelector.loadDefaultDirectory(primaryStage);
         if (!dir.exists()) { // Close program if can't get a valid songs directory.
@@ -59,12 +55,14 @@ public class MusicManiac extends Application {
         SongLoader loader = new SongLoader();
         ArrayList<Song> songs = loader.loadSongs();
        
+        PlaylistLoader playlistLoader = new PlaylistLoader();
+        ArrayList<Playlist> playlists = playlistLoader.getPlaylists();
         
         // Create PlayerPane
         PlayerPane playerPane = new PlayerPane(songs, scene);
         
         // Add SongsPane     
-        SongsPane songsPane = new SongsPane(songs, playerPane);
+        SongsPane songsPane = new SongsPane(songs, playerPane, playlists);
         root.setCenter(songsPane);
         
         // Add SearchPane
@@ -77,7 +75,7 @@ public class MusicManiac extends Application {
                     SongSearch songSearch = new SongSearch();
                     ArrayList<Song> foundSongs = songSearch.getSongs(songs, searchPane.getSearch());
                     
-                    SongsPane songsPane = new SongsPane(foundSongs, playerPane);
+                    SongsPane songsPane = new SongsPane(foundSongs, playerPane, playlists);
                     root.setCenter(songsPane);
                     
                     playerPane.setSongs(foundSongs);
@@ -86,6 +84,7 @@ public class MusicManiac extends Application {
         });
         
         // Create menu
+        // File menu
         Menu fileMenu = new Menu("File");
         
         MenuItem refresh = new MenuItem("Refresh library");
@@ -100,8 +99,12 @@ public class MusicManiac extends Application {
         search.setOnAction(actionEvent -> searchPane.requestFocus());
         fileMenu.getItems().add(search);
         
+        // Playlist menu
+        PlaylistMenu playlistMenu = new PlaylistMenu(playerPane, root, playlists);
+        
+        // Add menu
         MenuBar menuBar = new MenuBar();
-        menuBar.getMenus().add(fileMenu);
+        menuBar.getMenus().addAll(fileMenu, playlistMenu);
         
         // Add top box (the menu and PlayerPane)
         VBox topBox = new VBox();
@@ -117,9 +120,12 @@ public class MusicManiac extends Application {
         // Load songs
         SongLoader loader = new SongLoader();
         ArrayList<Song> songs = loader.reloadSongs();
+        
+        PlaylistLoader playlistLoader = new PlaylistLoader();
+        ArrayList<Playlist> playlists = playlistLoader.getPlaylists();
     
         // Add songs view
-        SongsPane songsPane = new SongsPane(songs, playerPane);
+        SongsPane songsPane = new SongsPane(songs, playerPane, playlists);
         root.setCenter(songsPane);
         
         playerPane.setSongs(songs);

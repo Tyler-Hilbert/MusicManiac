@@ -3,17 +3,14 @@ package musicmaniac;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.ObjectInputStream;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
 
 public class SavedSongLoader {
     
-    public ArrayList<Song> loadSongs() {
+    public ArrayList<Song> loadSongs(String filePath) {
         try {
-            File loadedSongsData = new File(MusicManiac.dir, "\\loadedSongsData.tmp");
+            File loadedSongsData = new File(filePath);
             FileInputStream fis = new FileInputStream(loadedSongsData);
             ObjectInputStream ois = new ObjectInputStream(fis);
             ArrayList<Song> songs = (ArrayList<Song>) ois.readObject();

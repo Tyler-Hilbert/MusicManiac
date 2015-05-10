@@ -12,7 +12,13 @@ import javafx.stage.Stage;
  */
 public class SongDirSelector {
     // The file that contains config info for default directory
-    private final static File configFile = new File("C:\\Users\\Tyler\\Documents\\NetBeansProjects\\MusicManiac\\src\\resources\\config\\dir.dat");
+    private static File configFile;
+    
+    
+    public SongDirSelector () {
+        String filePath = "C:\\Users\\Tyler\\Documents\\MusicManiac\\dir.dat";
+        configFile = new File(filePath);
+    }
     
        
     /**

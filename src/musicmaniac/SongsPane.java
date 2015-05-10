@@ -19,22 +19,41 @@ import javafx.scene.layout.VBox;
  */
 public class SongsPane extends ScrollPane{
     
-    public SongsPane(ArrayList<Song> songs, PlayerPane playerPane, ArrayList<Playlist> playlists) {
+    /**
+     * Create songs pane with songs in MusicManiac.songs
+     */
+    public SongsPane() {
         this.getStyleClass().add("songs-pane");
-        
-        // Create vbox
+        updateSongs();
+    }
+    
+    /**
+     * Displays default songs for music maniac
+     */
+    public void updateSongs() {
         VBox songsVBox = new VBox();
         songsVBox.setPadding(new Insets(10));
         songsVBox.setSpacing(8);
-        addSongsToVBox(songsVBox, songs, playerPane, playlists);
-        this.setContent(songsVBox);    
+        addSongsToVBox(songsVBox, MusicManiac.songs);
+        this.setContent(songsVBox); 
     }
     
+    /**
+     * Displays custom passed songs
+     * @param songs The songs to be displayed
+     */
+    public void updateSongs(ArrayList<Song> songs) {
+        VBox songsVBox = new VBox();
+        songsVBox.setPadding(new Insets(10));
+        songsVBox.setSpacing(8);
+        addSongsToVBox(songsVBox, songs);
+        this.setContent(songsVBox); 
+    }
     
     /**
      * adds the songs HBoxs to the songsVBox.
      */
-    private void addSongsToVBox(VBox songsVBox, ArrayList<Song> songs, PlayerPane playerPane, ArrayList<Playlist> playlists) {
+    private void addSongsToVBox(VBox songsVBox, ArrayList<Song> songs) {
         // Add to form
         for (int i = 0; i < songs.size(); i++) {
             Song song = songs.get(i);
@@ -57,7 +76,7 @@ public class SongsPane extends ScrollPane{
             // Context menu
             final ContextMenu contextMenu = new ContextMenu();
             
-            for (Playlist playlist : playlists) {
+            for (Playlist playlist : MusicManiac.playlists) {
                 MenuItem playlistItem = new MenuItem("add to " + playlist.getName());
                 playlistItem.setOnAction(new EventHandler<ActionEvent>() {
                     public void handle(ActionEvent e) {
@@ -73,7 +92,7 @@ public class SongsPane extends ScrollPane{
             // Add song action listener
             songHBox.setOnMousePressed((MouseEvent me) -> {
                 if (me.isPrimaryButtonDown()) {
-                    playerPane.playSelectedSong(song);
+                    MusicManiac.playerPane.playSelectedSong(song);
                 } else if (me.isSecondaryButtonDown()) {
                     contextMenu.show(songHBox, me.getScreenX(), me.getScreenY());
                 }

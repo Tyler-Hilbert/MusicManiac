@@ -5,10 +5,9 @@ import javafx.scene.control.MenuItem;
 import java.util.ArrayList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.layout.BorderPane;
 
 public class PlaylistMenu extends Menu {
-    PlaylistMenu(PlayerPane playerPane, BorderPane root, ArrayList<Playlist> playlists) {
+    PlaylistMenu() {
         this.setText("Playlists");
         
         // Create new playlist
@@ -18,18 +17,18 @@ public class PlaylistMenu extends Menu {
         newPlaylist.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent t) {
                 Playlist playlist = new Playlist();
-                playlists.add(playlist);
-                addPlaylistToMenu(playlist, root, playerPane, playlists);
+                MusicManiac.playlists.add(playlist);
+                addPlaylistToMenu(playlist);
             }
         }); 
         
         // Add playlists
-        for (Playlist playlist : playlists) {
-            addPlaylistToMenu(playlist, root, playerPane, playlists);
+        for (Playlist playlist : MusicManiac.playlists) {
+            addPlaylistToMenu(playlist);
         }
     }
     
-    private void addPlaylistToMenu(Playlist playlist, BorderPane root, PlayerPane playerPane, ArrayList<Playlist> playlists) {
+    private void addPlaylistToMenu(Playlist playlist) {
         MenuItem playlistItem = new MenuItem(playlist.getName());
         this.getItems().add(playlistItem);
 
@@ -38,10 +37,9 @@ public class PlaylistMenu extends Menu {
                 SavedSongLoader loader = new SavedSongLoader();
                 ArrayList<Song> foundSongs = loader.loadSongs(playlist.getPath());
 
-                SongsPane songsPane = new SongsPane(foundSongs, playerPane, playlists);
-                root.setCenter(songsPane);
-
-                playerPane.setSongs(foundSongs);
+                MusicManiac.songsPane.updateSongs(foundSongs);
+                MusicManiac.songs = foundSongs;
+                MusicManiac.playerPane.setSongs(foundSongs);
             }
         });  
     }

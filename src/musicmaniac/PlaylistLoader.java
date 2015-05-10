@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 public class PlaylistLoader {
     
-    public ArrayList<Playlist> playlists = new ArrayList<Playlist>();
+    private ArrayList<Playlist> playlists = new ArrayList<Playlist>();
     
     PlaylistLoader() {
         loadDirectory(new File(Playlist.dirPath));

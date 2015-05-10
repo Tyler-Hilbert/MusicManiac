@@ -12,7 +12,7 @@ import javafx.stage.Stage;
  */
 public class SongDirSelector {
     // The file that contains config info for default directory
-    private static File configFile;
+    private File configFile;
     
     
     public SongDirSelector () {
@@ -25,10 +25,10 @@ public class SongDirSelector {
      * Loads the default directory of songs to be loaded
      * @return The directory to load songs from.
      */
-    public File loadDefaultDirectory(Stage primaryStage) {
+    public File loadDefaultDirectory() {
         // Create config file if it doesn't exist.
         if (!configFile.exists()) {
-            return selectDefaultDirectory(primaryStage);
+            return selectNewDir();
         }
         
         try {
@@ -37,38 +37,25 @@ public class SongDirSelector {
             
             // Check if dir read is valid
             if (!dir.exists()) {
-                return selectDefaultDirectory(primaryStage);
+                return selectNewDir();
             } else {
                 return dir;
             }
         } catch (Exception ex) {
             ex.printStackTrace();
-            return selectDefaultDirectory(primaryStage);
+            return selectNewDir();
         }
     }
     
     
     /**
-     * Recreates config file and forces a default directory to be selected.
-     */
-    private File selectDefaultDirectory(Stage primaryStage) {
-        // Choose dir
-        DirectoryChooser directoryChooser = new DirectoryChooser();
-        File selectedDirectory = directoryChooser.showDialog(primaryStage);
-        
-        saveDir(selectedDirectory);
-        
-        return new File(selectedDirectory.getAbsolutePath());
-    }
-    
-    /**
      * Allows the user to select a new default directory
      * @return The selected directory
      */
-    public File selectNewDir(Stage primaryStage) {
+    public File selectNewDir() {
         // Choose dir
         DirectoryChooser directoryChooser = new DirectoryChooser();
-        File selectedDirectory = directoryChooser.showDialog(primaryStage);
+        File selectedDirectory = directoryChooser.showDialog(MusicManiac.primaryStage);
        
         saveDir(selectedDirectory);
         

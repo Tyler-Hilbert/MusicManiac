@@ -3,7 +3,6 @@ package musicmaniac;
 import java.io.File;
 import java.util.ArrayList;
 import javafx.event.EventHandler;
-import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -26,8 +25,8 @@ public class PlayerPane extends HBox {
     
     MediaPlayer mediaPlayer; // The audio playing component
     
-    public PlayerPane(ArrayList<Song> songs, Scene scene) {
-        queuedSongsList = songs;
+    public PlayerPane() {
+        queuedSongsList = MusicManiac.songs;
         
         this.getStyleClass().add("player-pane");
         songLabel.getStyleClass().add("playing-song-label");

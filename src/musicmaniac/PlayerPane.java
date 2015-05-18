@@ -35,11 +35,8 @@ public class PlayerPane extends HBox {
         Image playImg = new Image(MusicManiac.class.getResourceAsStream("/resources/img/play.png"));
         playButton = new ImageView(playImg);
         playButton.setPickOnBounds(true);
-        playButton.setOnMousePressed(new EventHandler<MouseEvent>() {
-            @Override 
-            public void handle(MouseEvent e) {
-                togglePlay();
-            }
+        playButton.setOnMousePressed((MouseEvent e) -> {
+            togglePlay();
         });
         
         
@@ -47,14 +44,11 @@ public class PlayerPane extends HBox {
         Image backImg = new Image(MusicManiac.class.getResourceAsStream("/resources/img/back.png"));
         ImageView backButton = new ImageView(backImg);
         backButton.setPickOnBounds(true);
-        backButton.setOnMousePressed(new EventHandler<MouseEvent>() {
-            @Override 
-            public void handle(MouseEvent e) {
-                if (mediaPlayer == null || mediaPlayer.currentTimeProperty().get().lessThan(new Duration(5000))) {
-                    previousSong();
-                } else {
-                    mediaPlayer.seek(Duration.ZERO);
-                }
+        backButton.setOnMousePressed((MouseEvent e) -> {
+            if (mediaPlayer == null || mediaPlayer.currentTimeProperty().get().lessThan(new Duration(5000))) {
+                previousSong();
+            } else {
+                mediaPlayer.seek(Duration.ZERO);
             }
         });
 
@@ -63,11 +57,8 @@ public class PlayerPane extends HBox {
         Image nextImg = new Image(MusicManiac.class.getResourceAsStream("/resources/img/forward.png"));
         ImageView nextButton = new ImageView(nextImg);
         nextButton.setPickOnBounds(true); 
-        nextButton.setOnMousePressed(new EventHandler<MouseEvent>() {
-            @Override 
-            public void handle(MouseEvent e) {
-                nextSong();
-            }
+        nextButton.setOnMousePressed((MouseEvent e) -> {
+            nextSong();
         });
        
         getChildren().addAll(backButton, playButton, nextButton, songLabel);

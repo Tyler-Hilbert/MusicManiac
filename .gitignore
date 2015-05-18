@@ -66,3 +66,12 @@ build/classes/resources/img/forward.png
 dist/web-files/dtjava.js
 build/classes/resources/img/logo.png
 dist/web-files/javafx-chrome.png
+build/classes/resources/img/play.png
+*.html
+*.js
+dist/run925395085/web-files/error.png
+dist/run925395085/web-files/get_java.png
+build/classes/resources/img/back_pressed.png
+build/classes/resources/img/play_pressed.png
+build/classes/resources/img/pause_pressed.png
+build/classes/resources/img/forward_pressed.png

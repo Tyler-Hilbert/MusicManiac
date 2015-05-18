@@ -2,7 +2,9 @@ package musicmaniac;
 
 import java.io.File;
 import java.util.ArrayList;
-import javafx.event.EventHandler;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -36,7 +38,30 @@ public class PlayerPane extends HBox {
         playButton = new ImageView(playImg);
         playButton.setPickOnBounds(true);
         playButton.setOnMousePressed((MouseEvent e) -> {
-            togglePlay();
+            if (mediaPlayer == null) {
+                startPlayingSongsList();
+                
+            } else if (mediaPlayer.getStatus() == MediaPlayer.Status.PLAYING) {
+                // Pause
+                Image pressedImg = new Image(MusicManiac.class.getResourceAsStream("/resources/img/pause_pressed.png"));
+                Timeline timeline = new Timeline(
+                    new KeyFrame(Duration.ZERO, new KeyValue(playButton.imageProperty(), pressedImg)),
+                    new KeyFrame(Duration.millis(100), new KeyValue(playButton.imageProperty(), playImg))
+                );
+                timeline.play();
+                mediaPlayer.pause();
+
+            } else {
+                // Play
+                Image pressedImg = new Image(MusicManiac.class.getResourceAsStream("/resources/img/play_pressed.png"));
+                Image pauseImg = new Image(MusicManiac.class.getResourceAsStream("/resources/img/pause.png"));
+                Timeline timeline = new Timeline(
+                    new KeyFrame(Duration.ZERO, new KeyValue(playButton.imageProperty(), pressedImg)),
+                    new KeyFrame(Duration.millis(100), new KeyValue(playButton.imageProperty(), pauseImg))
+                );
+                timeline.play();
+                mediaPlayer.play();
+            }
         });
         
         
@@ -45,6 +70,12 @@ public class PlayerPane extends HBox {
         ImageView backButton = new ImageView(backImg);
         backButton.setPickOnBounds(true);
         backButton.setOnMousePressed((MouseEvent e) -> {
+            Image pressedImg = new Image(MusicManiac.class.getResourceAsStream("/resources/img/back_pressed.png"));
+            Timeline timeline = new Timeline(
+                    new KeyFrame(Duration.ZERO, new KeyValue(backButton.imageProperty(), pressedImg)),
+                    new KeyFrame(Duration.millis(100), new KeyValue(backButton.imageProperty(), backImg))
+            );
+            timeline.play();
             if (mediaPlayer == null || mediaPlayer.currentTimeProperty().get().lessThan(new Duration(5000))) {
                 previousSong();
             } else {
@@ -58,6 +89,12 @@ public class PlayerPane extends HBox {
         ImageView nextButton = new ImageView(nextImg);
         nextButton.setPickOnBounds(true); 
         nextButton.setOnMousePressed((MouseEvent e) -> {
+            Image pressedImg = new Image(MusicManiac.class.getResourceAsStream("/resources/img/forward_pressed.png"));
+            Timeline timeline = new Timeline(
+                    new KeyFrame(Duration.ZERO, new KeyValue(nextButton.imageProperty(), pressedImg)),
+                    new KeyFrame(Duration.millis(100), new KeyValue(nextButton.imageProperty(), nextImg))
+            );
+            timeline.play();
             nextSong();
         });
        
@@ -107,14 +144,10 @@ public class PlayerPane extends HBox {
         // Set the song as playing or paused
         if (playSong) {
             mediaPlayer.play();
-            
            Image playImg = new Image(MusicManiac.class.getResourceAsStream("/resources/img/pause.png"));
             playButton.setImage(playImg);
         } else {
             mediaPlayer.pause();
-            
-           Image playImg = new Image(MusicManiac.class.getResourceAsStream("/resources/img/play.png"));
-           playButton.setImage(playImg);
         }
         
         // Set the next song to be played
@@ -147,27 +180,6 @@ public class PlayerPane extends HBox {
         playSong(song, true);
     }
        
-    /**
-     * Toggles between play and pause.
-     * starts playing through songs list.
-     */
-    private void togglePlay() {
-        if (mediaPlayer == null) {
-            startPlayingSongsList();
-
-        } else if (mediaPlayer.getStatus() == MediaPlayer.Status.PLAYING) {
-            // Pause
-            mediaPlayer.pause();
-            Image playImg = new Image(MusicManiac.class.getResourceAsStream("/resources/img/play.png"));
-            playButton.setImage(playImg);
-            
-        } else {
-            // Play
-            mediaPlayer.play();
-            Image playImg = new Image(MusicManiac.class.getResourceAsStream("/resources/img/pause.png"));
-            playButton.setImage(playImg);
-        }
-    }
     
     /**
      * Generate songs list and start playing

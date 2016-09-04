@@ -5,7 +5,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.PrintWriter;
 import javafx.stage.DirectoryChooser;
-import javafx.stage.Stage;
+
 
 /**
  * Selects and saves the default directory to load songs from.
@@ -16,7 +16,8 @@ public class SongDirSelector {
     
     
     public SongDirSelector () {
-        String filePath = "C:\\Users\\Tyler\\Documents\\MusicManiac\\dir.dat";
+        // ToDo: If the folder MusicManiac.documentsPath + "\\MusicManiac" doesn't exist, create it.
+        String filePath = MusicManiac.documentsPath + "\\MusicManiac\\dir.dat"; 
         configFile = new File(filePath);
     }
     

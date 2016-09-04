@@ -8,7 +8,6 @@ import java.util.ArrayList;
 
 
 public class Playlist implements Serializable{
-    final static String dirPath = "C:\\Users\\Tyler\\Documents\\MusicManiac\\playlists\\";
     private final static String ext = ".tmp"; // The file extension for playlists   
     
     private String path;    
@@ -19,10 +18,10 @@ public class Playlist implements Serializable{
      */
     Playlist () {
         // Find valid unique path
-        File file = new File(dirPath + "playlist" + ext);
+        File file = new File(PlaylistLoader.dirPath + "playlist" + ext);
         int count = 0;
         while (file.exists()){
-            file = new File(dirPath + "playlist" + count + ext);
+            file = new File(PlaylistLoader.dirPath + "playlist" + count + ext);
             count++;
         }
         this.path = file.toString();

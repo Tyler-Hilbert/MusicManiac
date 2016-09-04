@@ -8,9 +8,10 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javax.swing.JFileChooser;
 
 /**
- * Main for the application.
+ * Main class for the application.
  * Contains and instantiates all the components 
  */
 public class MusicManiac extends Application {
@@ -25,6 +26,9 @@ public class MusicManiac extends Application {
     static PlaylistMenu             playlistMenu;
     static Stage                    primaryStage;
     
+    static String                   documentsPath;
+    
+    
 
     
     @Override
@@ -37,7 +41,7 @@ public class MusicManiac extends Application {
         // Setup scene and root
         root = new BorderPane();
         Scene scene = new Scene(root, 1000, 800);
-        scene.getStylesheets().add("resources/css/style.css");
+        scene.getStylesheets().add("/resources/css/style.css");
          
         // Setup stage
         primaryStage.setTitle("Music Maniac");
@@ -80,6 +84,8 @@ public class MusicManiac extends Application {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+        //ToDO: Make sure MusicManiac.documentsPath + "\\MusicManiac\\playlists\\" exists, if not create it.
+        documentsPath = new JFileChooser().getFileSystemView().getDefaultDirectory().toString();
         launch(args);
     }
 }

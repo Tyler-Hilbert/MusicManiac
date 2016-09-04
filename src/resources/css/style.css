@@ -1,0 +1,67 @@
+.text {
+    -fx-font-family: "Vani";
+    -fx-font-size: 18;
+}
+
+// Components
+.button{
+    -fx-text-fill: rgb(49, 89, 23);
+    -fx-border-color: rgb(49, 89, 23);
+    -fx-border-radius: 5;
+    -fx-padding: 3 6 6 6;
+}
+
+.text-field {
+    -fx-font-family: "Vani";
+    -fx-font-size: 14;
+    -fx-padding: 0 5 0 10;
+}
+
+// Panes
+.song-hbox {
+    -fx-background-color: white;
+}
+
+
+
+.songs-pane {
+   -fx-background: white; 
+}
+
+.player-pane {
+    -fx-padding: 15 12 15 12;
+    -fx-spacing: 10;
+    -fx-background-color: #660000;
+}
+
+.playing-song-label {
+   -fx-text-fill: rgb(255, 255, 255);
+}
+
+// Menu
+.menu-item .label {
+    -fx-text-fill: white;
+}
+
+.menu-item:focused {
+     -fx-background-color: darkgray;
+}
+
+.menu-item:focused .label {
+    -fx-text-fill: #2A0000;
+}
+
+.context-menu {
+    -fx-background-color: black;
+    -fx-background-insets: 0, 1, 2;
+    -fx-background-radius: 0 6 6 6, 0 5 5 5, 0 4 4 4;
+    -fx-padding: 0.333333em 0.083333em 0.666667em 0.083333em;
+}
+
+.menu-bar {
+    -fx-background-color: #2A0000;
+}
+
+.menu-bar .label {
+    -fx-text-fill: white;
+}

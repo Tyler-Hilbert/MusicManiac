@@ -3,7 +3,7 @@
     -fx-font-size: 18;
 }
 
-// Components
+/* Components */
 .button{
     -fx-text-fill: rgb(49, 89, 23);
     -fx-border-color: rgb(49, 89, 23);
@@ -17,7 +17,7 @@
     -fx-padding: 0 5 0 10;
 }
 
-// Panes
+/* Panes */
 .song-hbox {
     -fx-background-color: white;
 }
@@ -38,7 +38,7 @@
    -fx-text-fill: rgb(255, 255, 255);
 }
 
-// Menu
+/* Menu */
 .menu-item .label {
     -fx-text-fill: white;
 }

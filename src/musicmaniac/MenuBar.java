@@ -23,12 +23,12 @@ public class MenuBar extends javafx.scene.control.MenuBar {
         fileMenu.getItems().add(search);
         
         // Playlist menu
-        PlaylistMenu playlistMenu = new PlaylistMenu();
+        //PlaylistMenu playlistMenu = new PlaylistMenu();
         
         // Add menu
         
         //javafx.scene.control.MenuBar menuBar = new javafx.scene.control.MenuBar();
-        this.getMenus().addAll(fileMenu, playlistMenu);
+        this.getMenus().addAll(fileMenu);
     }
     
      /**

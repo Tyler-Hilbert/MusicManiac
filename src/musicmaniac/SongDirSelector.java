@@ -16,7 +16,7 @@ public class SongDirSelector {
     
     
     public SongDirSelector () {
-        String filePath = "C:\\Users\\Tyler\\Documents\\MusicManiac\\dir.dat";
+        String filePath = "dir.dat";
         configFile = new File(filePath);
     }
     

@@ -48,14 +48,15 @@ public class MusicManiac extends Application {
         // Loads songs and playlists
         SongDirSelector dirSelector = new SongDirSelector();
         dir = dirSelector.loadDefaultDirectory();
+        
         if (!dir.exists()) { // Close program if can't get a valid songs directory.
             return;
         }
         SongLoader loader = new SongLoader();
         songs = loader.loadSongs();
        
-        PlaylistLoader playlistLoader = new PlaylistLoader();
-        playlists = playlistLoader.getPlaylists();
+        //PlaylistLoader playlistLoader = new PlaylistLoader();
+        //playlists = playlistLoader.getPlaylists();
         
         
         

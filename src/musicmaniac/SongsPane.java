@@ -93,14 +93,16 @@ public class SongsPane extends ScrollPane{
             // Context menu
             final ContextMenu contextMenu = new ContextMenu();
             
-            for (Playlist playlist : MusicManiac.playlists) {
-                MenuItem playlistItem = new MenuItem("add to " + playlist.getName());
-                playlistItem.setOnAction(new EventHandler<ActionEvent>() {
-                    public void handle(ActionEvent e) {
-                        playlist.addSong(song);
-                    }
-                });
-                contextMenu.getItems().add(playlistItem);
+            if (MusicManiac.playlists != null) {
+                for (Playlist playlist : MusicManiac.playlists) {
+                    MenuItem playlistItem = new MenuItem("add to " + playlist.getName());
+                    playlistItem.setOnAction(new EventHandler<ActionEvent>() {
+                        public void handle(ActionEvent e) {
+                            playlist.addSong(song);
+                        }
+                    });
+                    contextMenu.getItems().add(playlistItem);
+                }
             }
 
             titleLabel.setContextMenu(contextMenu);

@@ -23,8 +23,10 @@ public class PlaylistMenu extends Menu {
         }); 
         
         // Add playlists
-        for (Playlist playlist : MusicManiac.playlists) {
-            addPlaylistToMenu(playlist);
+        if (MusicManiac.playlists != null) {
+            for (Playlist playlist : MusicManiac.playlists) {
+                addPlaylistToMenu(playlist);
+            }
         }
     }
     

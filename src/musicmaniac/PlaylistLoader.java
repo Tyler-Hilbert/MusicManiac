@@ -14,12 +14,14 @@ public class PlaylistLoader {
     }
     
     private void loadDirectory(File dir) {
-        for (File playlistFile : dir.listFiles()) {
-            if (playlistFile.isDirectory()) {
-                loadDirectory(playlistFile);
-            } else {
-                if (playlistFile.toString().toLowerCase().contains(".tmp")) {
-                    playlists.add(new Playlist(playlistFile.toString())); 
+        if (dir.listFiles() != null) {
+            for (File playlistFile : dir.listFiles()) {
+                if (playlistFile.isDirectory()) {
+                    loadDirectory(playlistFile);
+                } else {
+                    if (playlistFile.toString().toLowerCase().contains(".tmp")) {
+                        playlists.add(new Playlist(playlistFile.toString())); 
+                    }
                 }
             }
         }

@@ -36,7 +36,7 @@ public class MusicManiac extends Application {
         
         // Setup scene and root
         root = new BorderPane();
-        Scene scene = new Scene(root, 1000, 800);
+        Scene scene = new Scene(root, 1000, 700);
         scene.getStylesheets().add("resources/css/style.css");
          
         // Setup stage

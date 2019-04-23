@@ -12,3 +12,5 @@ A lightweight music player using Java & JavaFX
 5) On Linux you must install libavformat. You can do this by running:  
 `sudo apt-get install libavformat-dev`  
  
+# Code location:  
+Majority of the code is in the [src/musicmaniac](https://github.com/Tyler-Hilbert/MusicManiac/tree/master/src/musicmaniac) directory.
